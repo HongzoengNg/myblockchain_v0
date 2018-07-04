@@ -1,0 +1,13 @@
+{
+    "index": 0,
+    "timestamp": 0,
+    "transactions": [
+        {
+            "sender": "",
+            "recipient": "",
+            "amount": 0
+        }
+    ],
+    "proof": 0,
+    "previous_hash": ""
+}
