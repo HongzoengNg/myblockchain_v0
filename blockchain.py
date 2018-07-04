@@ -9,7 +9,6 @@ import json
 import time
 import hashlib
 
-from uuid import uuid4
 
 BLOCK_FORMAT_FILE = 'block.json'
 with open(BLOCK_FORMAT_FILE, 'r') as load_json:
@@ -22,9 +21,9 @@ class Blockchain(object):
         self.current_transactions = []
 
         # Create the genesis block
-        self._new_block(previous_hash=1, proof=100)
+        self.new_block(previous_hash=1, proof=100)
 
-    def _new_block(self, proof, previous_hash=None):
+    def new_block(self, proof, previous_hash=None):
         # Creates a new Block and adds it to the chain
         """
         :param proof: <int> The proof given by the Proof of Work algorithm
@@ -42,7 +41,7 @@ class Blockchain(object):
         self.chain.append(block)
         return block
 
-    def _new_transaction(self, sender, recipient, amount):
+    def new_transaction(self, sender, recipient, amount):
         """
         generate the new transaction information and add in next pending block
 
@@ -59,7 +58,7 @@ class Blockchain(object):
         self.current_transactions.append(transaction)
         return self.last_block['index'] + 1
 
-    def _proof_of_work(self, last_proof):
+    def proof_of_work(self, last_proof):
         """
         simply POW:
         - seek a `p'` to let hash(pp') starting with 4 zeros
