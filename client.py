@@ -44,7 +44,7 @@ class Client(object):
             "recipient": recipient,
             "amount": amount
         }
-        response = requests.post(url, data=trans)
+        response = requests.post(url, json=trans)
         if response.status_code == 201:
             return response.json()
         else:
