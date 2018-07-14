@@ -12,6 +12,9 @@ from flask import (
 )
 from blockchain import Blockchain
 from uuid import uuid4
+from argparse import ArgumentParser
+from params import ADDRESS, DEFAULT_PORT
+
 
 # Initiate our node
 app = Flask(__name__)
@@ -111,12 +114,11 @@ def consensus():
     return jsonify(response), 200
 
 
-def main():
-    app.run()
-<<<<<<< HEAD
-=======
-
->>>>>>> a3a01770b970031962aafc41cd1bab4f1dfa6bfa
-
 if __name__ == '__main__':
-    main()
+    parser = ArgumentParser()
+    parser.add_argument(
+        '-p', '--port', default=DEFAULT_PORT, type=int, help='port to listen on'
+    )
+    args = parser.parse_args()
+    port = args.port
+    app.run(host=ADDRESS, port=port)
