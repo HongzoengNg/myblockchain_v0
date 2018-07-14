@@ -37,8 +37,8 @@ class Blockchain(object):
         block = CONST_BLOCK.copy()
         block['index'] = len(self.chain) + 1
         block['timestamp'] = time.time()
-        block['transactions'] = self.current_transactions,
-        block['proof'] = proof,
+        block['transactions'] = self.current_transactions
+        block['proof'] = proof
         block['previous_hash'] = previous_hash or self.hash(self.chain[-1])
         # reset the current list of transactions
         self.current_transactions = []
@@ -133,8 +133,7 @@ class Blockchain(object):
                 node_chain = response.json()
                 length = node_chain['length']
                 chain = node_chain['chain']
-                # TODO
-                if length > max_chain_length:
+                if length > max_chain_length and self.valid_chain(chain):
                     max_chain_length = length
                     new_chain = chain
 
