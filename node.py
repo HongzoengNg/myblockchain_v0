@@ -5,10 +5,6 @@
 @Last Modified by:   Ken Ng
 @Last Modified time: 2018-07-04 18:38:14
 """
-import requests
-import json
-
-from textwrap import dedent
 from flask import (
     Flask,
     jsonify,
@@ -61,7 +57,7 @@ def new_transaction():
     required_field = ['sender', 'recipient', 'amount']
     if not all(k in transaction for k in required_field):
         return 'Missing values', 400
-    
+
     # create a new transaction
     index = blockchain.new_transaction(
         transaction['sender'],
@@ -69,7 +65,7 @@ def new_transaction():
         transaction['amount']
     )
     response = {
-        'message': f'Transaction will be added to Block {index}'
+        'message': 'Transaction will be added to Block {}'.format(index)
     }
     return jsonify(response), 201
 
@@ -117,6 +113,10 @@ def consensus():
 
 def main():
     app.run()
+<<<<<<< HEAD
+=======
+
+>>>>>>> a3a01770b970031962aafc41cd1bab4f1dfa6bfa
 
 if __name__ == '__main__':
     main()
