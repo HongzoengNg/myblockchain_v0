@@ -8,6 +8,8 @@
 import json
 import time
 import hashlib
+from urllib.parse import urlparse
+import requests
 
 
 BLOCK_FORMAT_FILE = 'block.json'
@@ -22,6 +24,8 @@ class Blockchain(object):
 
         # Create the genesis block
         self.new_block(previous_hash=1, proof=100)
+
+        self.nodes = set()
 
     def new_block(self, proof, previous_hash=None):
         # Creates a new Block and adds it to the chain
@@ -99,3 +103,44 @@ class Blockchain(object):
     def last_block(self):
         # Returns the last Block in the chain
         return self.chain[-1]
+
+    def register_node(self, address):
+        parsed_url = urlparse(address)
+        self.nodes.add(parsed_url.netloc)
+
+    def valid_chain(self, chain):
+        for i in range(1, len(chain)):
+            block = chain[i]
+            previous_block = chain[i-1]
+            if block["previous_hash"] != self.hash(previous_block):
+                return False
+            if not self.valid_proof(
+                previous_block["proof"], block["proof"]
+            ):
+                return False
+        return True
+
+    def resolve_conflicts(self):
+        neighbours = self.nodes
+        new_chain = None
+
+        max_chain_length = len(self.chain)
+        for node in neighbours:
+            response = requests.get(
+                "http://{}/full_chain".format(node)
+            )
+            if response.status_code == 200:
+                node_chain = response.json()
+                length = node_chain['length']
+                chain = node_chain['chain']
+                if length > max_chain_length and (
+                    self.valid_chain(chain)
+                ):
+                    max_chain_length = length
+                    new_chain = chain
+
+        if new_chain:
+            self.chain = new_chain
+            return True
+
+        return False
